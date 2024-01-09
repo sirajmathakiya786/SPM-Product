@@ -32,7 +32,7 @@ export default function Header(){
                         <Link to="/dashboard" style={{ color: 'white', marginRight: '10px', textDecoration: "none"}}>Dashboard</Link>
                         <Link to="/category-list" style={{ color: 'white', marginRight: '10px', textDecoration: "none" }}>Category</Link>
                         <Link to="/sub-category-list" style={{ color: 'white', marginRight: '10px', textDecoration: "none" }}>SubCategory</Link>
-                        <Link to="#" style={{ color: 'white', marginRight: '10px', textDecoration: "none" }}>Product</Link>
+                        <Link to="/product-list" style={{ color: 'white', marginRight: '10px', textDecoration: "none" }}>Product</Link>
                         <Link to="#" style={{ color: 'white', marginRight: '10px', textDecoration: "none" }}>Cart</Link>
                         <Link to="#" style={{ color: 'white', marginRight: '10px', textDecoration: "none" }}>Order</Link>
                         <Link to="/user-list" style={{ color: 'white', marginRight: '10px', textDecoration: "none" }}>User</Link>

@@ -11,6 +11,9 @@ import CategoryList from './components/Category/ListCategory';
 import SubCategoryList from './components/SubCategory/SubCategoryList';
 import UserList from './components/User/UserList';
 import CreateCategory from './components/Category/CreateCategory';
+import CreateSubCategory from './components/SubCategory/CreateSubCategory';
+import ProductList from './components/Product/ProductList';
+import ProductAdd from './components/Product/ProductAdd';
 
 function AppRoutes() {
   return (
@@ -22,9 +25,13 @@ function AppRoutes() {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/category-list" element={<CategoryList />} />
-      <Route path="/sub-category-list" element={<SubCategoryList />} />
-      <Route path="/user-list" element={<UserList />} />
       <Route path="/create-category" element={<CreateCategory />} />
+      <Route path="/sub-category-list" element={<SubCategoryList />} />
+      <Route path="/create-sub-category" element={<CreateSubCategory />} />
+      <Route path="/user-list" element={<UserList />} />
+      <Route path="/product-list" element={<ProductList />} />
+      <Route path="/add-product" element={<ProductAdd />} />
+      
     </Routes>
   );
 }

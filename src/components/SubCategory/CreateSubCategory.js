@@ -1,10 +1,9 @@
 import Header from "../Layouts/Header";
 import React, { useRef, useState } from "react";
-import { Grid, TextField } from '@mui/material';
-import { Button } from "react-bootstrap";
+import { Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 
 
-const CreateCategory = () => {
+const CreateSubCategory = () => {
   const [selectedImage, setSelectedImage] = useState('');
   const inputRef = useRef('');
   const [formData, setFormData] = useState({})
@@ -39,31 +38,49 @@ const CreateCategory = () => {
       <Header />
       <div className="container mt-4">
       <h2 className="mb-4" style={{ marginTop: '70px', textAlign: 'center' }}>
-        Add Category
+        Add SubCategory
       </h2>
 
       <React.Fragment>
+        <Grid container justifyContent="center" spacing={3}>
+            <Grid item xs={12} sm={6}>
+                <InputLabel htmlFor="subCategory" style={{ marginBottom: '10px' }}>
+                Category Name
+                </InputLabel>
+                <Select
+                required
+                id="subCategory"
+                fullWidth
+                autoComplete="Category"
+                variant="outlined"
+                style={{ borderRadius: '20px' }}
+                >
+                <MenuItem value="option1">Option 1</MenuItem>
+                <MenuItem value="option2">Option 2</MenuItem>
+                <MenuItem value="option3">Option 3</MenuItem>
+                </Select>
+            </Grid>
+        </Grid>
         <Grid container justifyContent="center" spacing={3}>
           <Grid item xs={12} sm={6}>
             <TextField
               required
               id="name"
               name="name"
-              label="Category Name"
-             
+              label="SubCategory Name"
               fullWidth
               autoComplete="Category"
               variant="outlined"
-              style={{ borderRadius: '20px' }}
+              style={{ borderRadius: '20px', marginTop: '30px'  }}
             />
           </Grid>
-          </Grid>
+        </Grid>
           <div className="mb-3" >
             <input
               type="file"
               className="form-control"
-              id="profileImage"
-              name="profileImage"
+              id="image"
+              name="image"
               onChange={handleImageChange}
               ref={inputRef}
               style={{ display: 'none' }}
@@ -106,4 +123,4 @@ const CreateCategory = () => {
   );
 };
 
-export default CreateCategory;
+export default CreateSubCategory;

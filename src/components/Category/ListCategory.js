@@ -18,7 +18,7 @@ const CategoryList = () => {
         </Col>
         <Col md={6} className="text-end">
         <Link to={"/create-category"} >
-          <Button variant="primary">Add User</Button>
+          <Button variant="primary">Add Category</Button>
         </Link>
         
         </Col>

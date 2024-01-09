@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, Form, Button, Row, Col } from 'react-bootstrap';
 import Header from '../Layouts/Header';
+import { Link } from 'react-router-dom';
 
 const SubCategoryList = () => {
   return (
@@ -16,7 +17,9 @@ const SubCategoryList = () => {
           <Form.Control type="text" placeholder="Search SubCategory" />
         </Col>
         <Col md={6} className="text-end">
-          <Button variant="primary">Add SubCategory</Button>
+          <Link to={"/create-sub-category"}>
+            <Button variant="primary">Add SubCategory</Button>
+          </Link>
         </Col>
       </Row>
 
