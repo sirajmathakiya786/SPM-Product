@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, Form, Button, Row, Col } from 'react-bootstrap';
 import Header from '../Layouts/Header';
+import { Link } from 'react-router-dom';
 
 const UserList = () => {
   return (
@@ -16,7 +17,9 @@ const UserList = () => {
           <Form.Control type="text" placeholder="Search User" />
         </Col>
         <Col md={6} className="text-end">
+          <Link to="/add-user">
           <Button variant="primary">Add User</Button>
+          </Link>
         </Col>
       </Row>
 

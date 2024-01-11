@@ -1,9 +1,6 @@
 import Header from "../Layouts/Header";
 import React, { useRef, useState } from "react";
-import { Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Grid, InputLabel, MenuItem, Select, TextField, TextareaAutosize } from '@mui/material';
 
 
 const ProductAdd = () => {
@@ -16,7 +13,6 @@ const ProductAdd = () => {
     const file = e.target.files[0];
     if (file) {
       setFormData({
-       
         profileImage: file
       })
       const reader = new FileReader();
@@ -38,9 +34,6 @@ const ProductAdd = () => {
     setSelectedImage('');
   };
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
 
   return (
     <>
@@ -105,37 +98,54 @@ const ProductAdd = () => {
             />
           </Grid>
         </Grid>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <Grid container justifyContent="center" spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <DatePicker
-            label="Choose Date"
-            value={selectedDate}
-            onChange={handleDateChange}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                required
-                id="productName"
-                name="productName"
-                label="Product Name"
-                fullWidth
-                autoComplete="ProductName"
-                variant="outlined"
-                style={{ marginTop: "30px", borderRadius: "20px" }}
-              />
-            )}
-          />
+        <Grid container justifyContent="center" spacing={3}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              required
+              id="price"
+              name="price"
+              label="Price"
+              fullWidth
+              autoComplete="Price"
+              variant="outlined"
+              type="number"
+              style={{marginTop: "30px", borderRadius: '20px' }}
+            />
+          </Grid>
         </Grid>
-      </Grid>
-    </LocalizationProvider>
-
+        <Grid container justifyContent="center" spacing={3}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              required
+              id="stock"
+              name="stock"
+              label="Stock"
+              fullWidth
+              autoComplete="stock"
+              variant="outlined"
+              type="number"
+              style={{marginTop: "30px", borderRadius: '20px' }}
+            />
+          </Grid>
+        </Grid>
+        <Grid container justifyContent="center" spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <TextareaAutosize
+                required
+                id="description"
+                name="description"
+                rowsMin={3}
+                placeholder="Description"
+                style={{ marginTop: "30px", borderRadius: '20px', width: '100%', padding: '10px' }}
+              />
+            </Grid>
+          </Grid>
           <div className="mb-3" >
             <input
               type="file"
               className="form-control"
-              id="image"
-              name="image"
+              id="productImage"
+              name="productImage"
               onChange={handleImageChange}
               ref={inputRef}
               style={{ display: 'none' }}

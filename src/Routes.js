@@ -14,6 +14,7 @@ import CreateCategory from './components/Category/CreateCategory';
 import CreateSubCategory from './components/SubCategory/CreateSubCategory';
 import ProductList from './components/Product/ProductList';
 import ProductAdd from './components/Product/ProductAdd';
+import UserAdd from './components/User/UserAdd';
 
 function AppRoutes() {
   return (
@@ -31,6 +32,7 @@ function AppRoutes() {
       <Route path="/user-list" element={<UserList />} />
       <Route path="/product-list" element={<ProductList />} />
       <Route path="/add-product" element={<ProductAdd />} />
+      <Route path="/add-user" element={<UserAdd />} />
       
     </Routes>
   );
