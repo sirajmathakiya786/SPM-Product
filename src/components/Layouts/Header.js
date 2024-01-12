@@ -2,10 +2,20 @@ import { AppBar, Toolbar, IconButton, Box, Menu, MenuItem } from '@mui/material'
 import { Link,useNavigate } from "react-router-dom";
 import { Menu as MenuIcon, AccountCircle } from '@mui/icons-material';
 import { useState } from "react";
+import { useDispatch } from 'react-redux';
+import { userLogout } from '../Redux/user/UserSlice';
 
 export default function Header(){
+    let navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
-   // const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const handleLogout = () =>{
+        dispatch(userLogout());
+        setTimeout(()=>{
+            navigate('/login')
+        })
+    }
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -14,11 +24,7 @@ export default function Header(){
         setAnchorEl(null);
     };
 
-    // const handleLogout = () => {
-    //     handleClose();
-    //     localStorage.removeItem("token")
-    //     navigate('/login')
-    // };
+     
     return (
         <div>
             <AppBar>
@@ -40,7 +46,7 @@ export default function Header(){
                             <AccountCircle></AccountCircle>
                         </IconButton>
                         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                            <MenuItem>Logout</MenuItem>
+                            <MenuItem onClick={handleLogout}>Logout</MenuItem>
                         </Menu>
                     </div>
                 </Toolbar>

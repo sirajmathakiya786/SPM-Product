@@ -15,26 +15,30 @@ import CreateSubCategory from './components/SubCategory/CreateSubCategory';
 import ProductList from './components/Product/ProductList';
 import ProductAdd from './components/Product/ProductAdd';
 import UserAdd from './components/User/UserAdd';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function AppRoutes() {
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/verify-otp" element={<VerifyOTP />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/category-list" element={<CategoryList />} />
-      <Route path="/create-category" element={<CreateCategory />} />
-      <Route path="/sub-category-list" element={<SubCategoryList />} />
-      <Route path="/create-sub-category" element={<CreateSubCategory />} />
-      <Route path="/user-list" element={<UserList />} />
-      <Route path="/product-list" element={<ProductList />} />
-      <Route path="/add-product" element={<ProductAdd />} />
-      <Route path="/add-user" element={<UserAdd />} />
-      
-    </Routes>
+    <>
+    <ToastContainer/>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/verify-otp" element={<VerifyOTP />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/category-list" element={<CategoryList />} />
+        <Route path="/create-category" element={<CreateCategory />} />
+        <Route path="/sub-category-list" element={<SubCategoryList />} />
+        <Route path="/create-sub-category" element={<CreateSubCategory />} />
+        <Route path="/user-list" element={<UserList />} />
+        <Route path="/product-list" element={<ProductList />} />
+        <Route path="/add-product" element={<ProductAdd />} />
+        <Route path="/add-user" element={<UserAdd />} />
+      </Routes>
+    </>
   );
 }
 

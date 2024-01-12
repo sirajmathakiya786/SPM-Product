@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,6 +10,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useDispatch } from 'react-redux';
+import { userLogin } from '../Redux/user/UserSlice';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -27,7 +32,36 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 const Login = ()=> {
-   
+  let navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  })
+
+  const handleInputChange = (e)=>{
+      setFormData({
+        ...formData,
+        [e.target.name]: e.target.value
+      })
+  }
+
+  const handleSubmit = (e)=> {
+      e.preventDefault();
+      dispatch(userLogin(formData))
+      .then((result)=>{
+        if(result.payload.status === 200){
+          toast.success(result.payload.message)
+          setTimeout(()=>{
+            navigate('/dashboard')
+          },2000)
+        }
+      })
+      .catch((error)=>{
+        
+      })
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -47,7 +81,7 @@ const Login = ()=> {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" noValidate  sx={{ mt: 3 }}>
+          <Box component="form" onSubmit={handleSubmit} noValidate  sx={{ mt: 3 }}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <TextField
@@ -57,6 +91,7 @@ const Login = ()=> {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
+                    onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -68,6 +103,7 @@ const Login = ()=> {
                     type="password"
                     id="password"
                     autoComplete="new-password"
+                    onChange={handleInputChange}
                     />
                 </Grid>
             </Grid>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,6 +10,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { userRegister } from '../Redux/user/UserSlice';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -24,12 +29,54 @@ function Copyright(props) {
   );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
 const Register = ()=> {
-   
+  let navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+
+  const handleRegister = async (event) => {
+    event.preventDefault();
+
+    if(password !== confirmPassword){
+      setConfirmPasswordError("Password and confirm password don't match")
+      return;
+    }else{
+      setConfirmPassword('')
+    }
+
+    const formData = {
+      name,
+      email,
+      phoneNumber,
+      password,
+      confirmPassword,
+    };
+    
+    try {
+      if (password === confirmPassword) {
+        const response = await dispatch(userRegister(formData));
+        console.log("response",response)
+        if(response.payload.status === 201){
+          toast.success(response.payload.message)
+          setTimeout(()=>{
+            navigate('/login')
+          },2000)
+        }
+      }
+    } catch (error) {
+       console.log(error);
+    }
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -48,7 +95,7 @@ const Register = ()=> {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate  sx={{ mt: 3 }}>
+          <Box component="form"  onSubmit={handleRegister} noValidate  sx={{ mt: 3 }}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <TextField
@@ -57,6 +104,8 @@ const Register = ()=> {
                     id="name"
                     label="Name"
                     name="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     autoComplete="name"
                     />
                 </Grid>
@@ -67,6 +116,8 @@ const Register = ()=> {
                     id="email"
                     label="Email Address"
                     name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     autoComplete="email"
                     />
                 </Grid>
@@ -77,6 +128,8 @@ const Register = ()=> {
                     id="phoneNumber"
                     label="phoneNumber"
                     name="phoneNumber"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
                     autoComplete="phoneNumber"
                     />
                 </Grid>
@@ -88,6 +141,8 @@ const Register = ()=> {
                     label="Password"
                     type="password"
                     id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     autoComplete="new-password"
                     />
                 </Grid>
@@ -97,9 +152,13 @@ const Register = ()=> {
                     fullWidth
                     name="confirmPassword"
                     label="ConfirmPassword"
-                    type="confirmPassword"
+                    type="password"
                     id="confirmPassword"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     autoComplete="confirmPassword"
+                    error={!!confirmPasswordError}
+                    helperText={confirmPasswordError}
                     />
                 </Grid>
             </Grid>
