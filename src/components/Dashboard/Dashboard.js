@@ -1,9 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../Layouts/Header";
 import { Card, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import AxiosInstance from "../services/DataService";
 
 const Dashboard = () => {
+  const[counts, setCounts] = useState({
+    categoryCount:0,
+    productCount:0,
+    subCategoryCount:0,
+    userCount:0
+  });
+  const fetchData = async ()=>{
+    const response = await AxiosInstance.get('/dashboard/get-count');
+    setCounts(response.data.data)
+  }  
+  useEffect(()=>{
+    fetchData();
+  },[])
   return (
     <>
       <Header />
@@ -17,7 +31,7 @@ const Dashboard = () => {
             <Card.Body>
               <Card.Title>Category</Card.Title>
               <Card.Text>
-                <p>Category Count: 00</p>
+                <p>Category Count: {counts.categoryCount}</p>
               </Card.Text>
             </Card.Body>
           </Card>
@@ -27,7 +41,7 @@ const Dashboard = () => {
             <Card.Body>
               <Card.Title>Sub Category</Card.Title>
               <Card.Text>
-                <p>SubCategory Count: 00</p>
+                <p>SubCategory Count: {counts.subCategoryCount}</p>
               </Card.Text>
             </Card.Body>
           </Card>
@@ -37,7 +51,7 @@ const Dashboard = () => {
             <Card.Body>
               <Card.Title>Product</Card.Title>
               <Card.Text>
-                <p>Product Count: 00</p>
+                <p>Product Count: {counts.productCount}</p>
               </Card.Text>
             </Card.Body>
           </Card>
@@ -57,7 +71,7 @@ const Dashboard = () => {
             <Card.Body>
               <Card.Title>User</Card.Title>
               <Card.Text>
-                <p>User Count: 00</p>
+                <p>User Count: {counts.userCount}</p>
               </Card.Text>
             </Card.Body>
           </Card>

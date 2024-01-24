@@ -58,6 +58,7 @@ const userSlice = createSlice({
             state.isLoading = false;
             state.userToken = action.payload.token;
             state.isAuthenticated = true
+            localStorage.setItem("token",action.payload.token)
         })
     }
 });

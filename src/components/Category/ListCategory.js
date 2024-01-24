@@ -1,9 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Form, Button, Row, Col } from 'react-bootstrap';
 import Header from '../Layouts/Header';
 import { Link } from 'react-router-dom';
+import AxiosInstance from '../services/DataService';
+import ReactPaginate from 'react-paginate';
 
 const CategoryList = () => {
+  const [categoryList, setCategoryList] = useState([]);
+  const[pageNumber, setPageNumber] = useState(0);
+  const itemsPerPage = 10;
+
+  const fetchCategory = async() =>{
+    try {
+      const response = await AxiosInstance.get("category/list")
+      setCategoryList(response.data.data)
+    } catch (error) {
+      
+    }
+  }
+
+  useEffect(()=>{
+    fetchCategory();
+  }, [])
+
+  const pageCount = Math.ceil(categoryList.length / itemsPerPage);
+
+  const handlePageClick = ({ selected }) => {
+    setPageNumber(selected);
+  };
+
+  const slicedData = categoryList.slice(
+    pageNumber * itemsPerPage,
+    (pageNumber + 1) * itemsPerPage
+  );
+
   return (
     <>
     <Header />
@@ -34,18 +64,50 @@ const CategoryList = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Category 1</td>
-            <td>1</td>
+          { slicedData.length ? slicedData?.map((category, index)=>{
+            console.log("Category:", category);
+          return (
+          <tr key={index}>
+            <td>{index +1}</td>
+            <td>{category.name}</td>
+            <td>
+              {category.image && (
+                <img 
+                src={`${category.image}`}
+                style={{ width: '50px', height: '50px', objectFit: 'cover'}}
+                className="common-image"
+                />
+              )}
+            </td>
             <td>
               <Button variant="info">Edit</Button>{' '}
               <Button variant="danger">Delete</Button>
             </td>
           </tr>
-          {/* Add more rows for additional categories */}
+          )
+        })
+       : "No record found"}
         </tbody>
       </Table>
+      <ReactPaginate
+        previousLabel={"Previous"}
+        nextLabel={"Next"}
+        breakLabel={"..."}
+        breakClassName={"break-me"}
+        pageCount={pageCount}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={5}
+        onPageChange={handlePageClick}
+        containerClassName={"pagination"}
+        subContainerClassName={"pages pagination"}
+        activeClassName={"active"}
+        pageClassName={"page-item"} // Add this line for box-style
+        previousClassName={"page-item"} // Add this line for box-style
+        nextClassName={"page-item"} // Add this line for box-style
+        pageLinkClassName={"page-link"} // Add this line for box-style
+        previousLinkClassName={"page-link"} // Add this line for box-style
+        nextLinkClassName={"page-link"} // Add this line for box-style
+      />
     </div>
     </>
   );

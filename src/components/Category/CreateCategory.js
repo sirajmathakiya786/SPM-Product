@@ -2,19 +2,47 @@ import Header from "../Layouts/Header";
 import React, { useRef, useState } from "react";
 import { Grid, TextField } from '@mui/material';
 import { Button } from "react-bootstrap";
+import AxiosInstance from "../services/DataService";
+import { toast } from "react-toastify";
 
 
 const CreateCategory = () => {
   const [selectedImage, setSelectedImage] = useState('');
   const inputRef = useRef('');
-  const [formData, setFormData] = useState({})
 
+  const [formData, setFormData] = useState({
+    name: '',
+    image: ''
+  })
+  
+  const handleChange = (e) =>{
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleSubmit = async(e)=>{
+    try {
+      e.preventDefault();
+      const data = new FormData();
+      data.append("name", formData.name);
+      data.append("image", formData.image);
+
+      const response = await AxiosInstance.post("category/add", data)
+      if(response.status === 201){
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      
+    }
+  }
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setFormData({
-       
-        profileImage: file
+        ...formData,
+        image: file,
       })
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -30,7 +58,7 @@ const CreateCategory = () => {
   
   const removeImage = () => {
     setFormData({
-      profileImage: ''
+      image: ''
     })
     setSelectedImage('');
   };
@@ -43,17 +71,19 @@ const CreateCategory = () => {
       </h2>
 
       <React.Fragment>
-        <Grid container justifyContent="center" spacing={3}>
+        <form onSubmit={handleSubmit}>
+        <Grid container justifyContent="center"  spacing={3}>
           <Grid item xs={12} sm={6}>
             <TextField
               required
               id="name"
               name="name"
               label="Category Name"
-             
               fullWidth
               autoComplete="Category"
               variant="outlined"
+              value={formData.name}
+              onChange={handleChange}
               style={{ borderRadius: '20px' }}
             />
           </Grid>
@@ -62,8 +92,8 @@ const CreateCategory = () => {
             <input
               type="file"
               className="form-control"
-              id="profileImage"
-              name="profileImage"
+              id="image"
+              name="image"
               onChange={handleImageChange}
               ref={inputRef}
               style={{ display: 'none' }}
@@ -99,6 +129,7 @@ const CreateCategory = () => {
                 Cancel
               </button>
             </div>
+            </form>
       </React.Fragment>
     </div>
 

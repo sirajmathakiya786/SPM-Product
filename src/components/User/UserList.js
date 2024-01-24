@@ -1,9 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Form, Button, Row, Col } from 'react-bootstrap';
 import Header from '../Layouts/Header';
 import { Link } from 'react-router-dom';
+import AxiosInstance from '../services/DataService';
 
 const UserList = () => {
+    const [userList, setUserList] = useState([]);
+
+    const fetchUser = async() =>{
+      try {
+        const response = await AxiosInstance.get("users/list")
+        setUserList(response.data.data)
+      } catch (error) {
+        
+      }
+    }
+    useEffect(() =>{
+      fetchUser();
+    }, []);
+
   return (
     <>
     <Header />
@@ -36,19 +51,24 @@ const UserList = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Test</td>
-            <td>test@gmail.com</td>
-            <td>1234567890</td>
-            <td>Admin</td>
+          { userList.length ? userList?.map((user,index)=>{
+
+          return (
+          <tr key={index}>
+            <td>{index + 1}</td>
+            <td>{user.name}</td>
+            <td>{user.email}</td>
+            <td>{user.phoneNumber}</td>
+            <td>{user.role}</td>
             <td>1</td>
             <td>
               <Button variant="info">Edit</Button>{' '}
               <Button variant="danger">Delete</Button>
             </td>
           </tr>
-          {/* Add more rows for additional categories */}
+          )
+          })
+          : "No record found"}
         </tbody>
       </Table>
     </div>

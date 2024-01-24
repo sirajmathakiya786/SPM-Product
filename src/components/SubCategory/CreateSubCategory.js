@@ -6,7 +6,9 @@ import { Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 const CreateSubCategory = () => {
   const [selectedImage, setSelectedImage] = useState('');
   const inputRef = useRef('');
-  const [formData, setFormData] = useState({})
+  const [formData, setFormData] = useState({
+    
+  })
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
