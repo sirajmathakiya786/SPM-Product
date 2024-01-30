@@ -1,14 +1,73 @@
 import Header from "../Layouts/Header";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Grid, InputLabel, MenuItem, Select, TextField, TextareaAutosize } from '@mui/material';
+import AxiosInstance from "../services/DataService";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 
 const ProductAdd = () => {
+  let navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const inputRef = useRef('');
   const [formData, setFormData] = useState({})
+  const [categoryName, setCategoryName] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubCategories] = useState([]);
+  const [subCategoryName, setSubCategoryName] = useState([]);
 
+  const fetchCategories = async()=>{
+    try {
+      const response = await AxiosInstance.get("category/get-categories")
+      setCategories(response.data.data)
+      setCategoryName(response.data.data.map((item)=> item.name));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const fetchSubCategories = async()=>{
+    try {
+      const response = await AxiosInstance.get("subcategory/all-sub-categories")
+      setSubCategories(response.data.data)
+      setSubCategoryName(response.data.data.map((item)=> item.name));
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+
+  useEffect(()=>{
+    fetchCategories(); 
+    fetchSubCategories();
+  },[])
+
+  const handleSubmit = async(e)=>{
+    e.preventDefault();
+    try {
+      const formDataSend = new FormData();
+      formDataSend.append("categoryId", e.target.categoryname.value);
+      formDataSend.append("subCategoryId", e.target.subCategory.value);
+      formDataSend.append("productName", e.target.productName.value);
+      formDataSend.append("price", e.target.price.value);
+      formDataSend.append("stock", e.target.stock.value);
+      formDataSend.append("description", e.target.description.value);
+      formDataSend.append("productImage", e.target.productImage.files[0]);
+
+      const response = await AxiosInstance.post("product/add", formDataSend);
+      if(response.status === 201){
+        toast.success(response.data.message)
+        setTimeout(()=>{
+          navigate("/product-list")
+        })
+      }
+    } catch (error) {
+      if(error.response && error.response.data && error.response.data.message){
+        toast.error(error.response.data.message)
+      }
+    }
+  }
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -44,6 +103,7 @@ const ProductAdd = () => {
       </h2>
 
       <React.Fragment>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
         <Grid container justifyContent="center" spacing={3}>
             <Grid item xs={12} sm={6}>
                 <InputLabel htmlFor="subCategory" style={{ marginBottom: '10px' }}>
@@ -58,9 +118,11 @@ const ProductAdd = () => {
                 variant="outlined"
                 style={{ borderRadius: '20px' }}
                 >
-                <MenuItem value="option1">Option 1</MenuItem>
-                <MenuItem value="option2">Option 2</MenuItem>
-                <MenuItem value="option3">Option 3</MenuItem>
+                  {categories.map((category)=>(
+                    <MenuItem key={category._id} value={category._id}>{category.name}</MenuItem>
+                  ))}
+                
+                
                 </Select>
             </Grid>
         </Grid>
@@ -78,9 +140,13 @@ const ProductAdd = () => {
                 variant="outlined"
                 style={{ borderRadius: '20px' }}
                 >
-                <MenuItem value="option1">Option 1</MenuItem>
-                <MenuItem value="option2">Option 2</MenuItem>
-                <MenuItem value="option3">Option 3</MenuItem>
+                  {subcategories.map((subCategory) => (
+    <MenuItem key={subCategory._id} value={subCategory._id}>
+      {subCategory.name}
+    </MenuItem>
+  ))}
+                 
+               
                 </Select>
             </Grid>
         </Grid>
@@ -174,13 +240,14 @@ const ProductAdd = () => {
               </div>
             </div>
             <div style={{ textAlign: 'center', marginTop: '20px', marginRight:"380px" }}>
-              <button className="btn btn-primary mx-2" >
+              <button type="submit" className="btn btn-primary mx-2" >
                 Submit
               </button>
               <button className="btn btn-secondary mx-2" >
                 Cancel
               </button>
             </div>
+            </form>
       </React.Fragment>
     </div>
 

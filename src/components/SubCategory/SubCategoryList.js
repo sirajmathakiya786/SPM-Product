@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Table, Form, Button, Row, Col } from "react-bootstrap";
+import { Table, Form, Button, Row, Col, Modal } from "react-bootstrap";
 import Header from "../Layouts/Header";
 import { Link } from "react-router-dom";
 import AxiosInstance from "../services/DataService";
-import ReactPaginate from 'react-paginate';
+import ReactPaginate from "react-paginate";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { toast } from "react-toastify";
 
 const SubCategoryList = () => {
   const [subCategoryList, setSubCategoryList] = useState([]);
-  const[pageNumber, setPageNumber] = useState(0);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [delteSubCategoryId, setDelteSubCategoryId] = useState('');
   const itemsPerPage = 10;
-  
+
   const fetchSubCategory = async () => {
     try {
       const response = await AxiosInstance.get("subcategory/list");
@@ -31,6 +37,35 @@ const SubCategoryList = () => {
     pageNumber * itemsPerPage,
     (pageNumber + 1) * itemsPerPage
   );
+
+  const handleDelete = async(id)=>{
+    try {
+      const response = await AxiosInstance.delete(`subcategory/delete-sub-category/${id}`)
+      if(response.status === 200){
+        toast.success(response.data.message)
+        fetchSubCategory();
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  }
+
+  const handleConfirmDelete = ()=>{
+    if(delteSubCategoryId){
+      handleDelete(delteSubCategoryId);
+      setShowDeleteModal(false);
+      setDelteSubCategoryId(null);
+    }
+  }
+  const showDeleteConfirmation = (subCategoryId)=>{
+    setDelteSubCategoryId(subCategoryId);
+    setShowDeleteModal(true);
+  }
+
+  const handleCancelConfirmation = ()=>{
+    setShowDeleteModal(false);
+    setDelteSubCategoryId(null)
+  }
 
   return (
     <>
@@ -72,14 +107,22 @@ const SubCategoryList = () => {
                     {subCategory.imageUrl && (
                       <img
                         src={`${subCategory.imageUrl}`}
-                        style={{ width: '50px', height: '50px', objectFit: 'cover'}}
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          objectFit: "cover",
+                        }}
                         className="common-image"
                       />
                     )}
                   </td>
                   <td>
-                    <Button variant="info">Edit</Button>{" "}
-                    <Button variant="danger">Delete</Button>
+                    <IconButton color="primary">
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton color="secondary" onClick={()=> showDeleteConfirmation(subCategory._id)}>
+                      <DeleteIcon />
+                    </IconButton>
                   </td>
                 </tr>
               ))
@@ -109,6 +152,22 @@ const SubCategoryList = () => {
           previousLinkClassName={"page-link"} // Add this line for box-style
           nextLinkClassName={"page-link"} // Add this line for box-style
         />
+        <Modal show={showDeleteModal} onHide={handleCancelConfirmation} style={{ marginTop: '50px' }} >
+          <Modal.Header closeButton>
+            <Modal.Title>Confirm Delete</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Are you sure you want to delete this category?
+          </Modal.Body>
+          <Modal.Footer>
+          <Button variant="secondary" onClick={handleCancelConfirmation} >
+            Cancel
+          </Button>
+          <Button variant="danger"  onClick={handleConfirmDelete}>
+            Delete
+          </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </>
   );

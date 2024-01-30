@@ -6,83 +6,76 @@ import { Grid, TextField } from '@mui/material';
 import { Button } from "react-bootstrap";
 import AxiosInstance from "../services/DataService";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
-const CreateCategory = () => {
-  let navigate = useNavigate();
-  const [selectedImage, setSelectedImage] = useState('');
-  const inputRef = useRef('');
-
-  const [formData, setFormData] = useState({
-    name: '',
-    image: ''
-  })
-
-  const validationSchema = Yup.object({
-    categoryName: Yup.string().required("categoryName is required"),
-    image: Yup.string().required("image is required"),
-  })
-
-  const handleChange = (e) =>{
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
+const EditCategory = () => {
+    let navigate = useNavigate();
+    const [selectedImage, setSelectedImage] = useState('');
+    const inputRef = useRef('');
+    const { category } = useLocation().state
+    
+    const [formData, setFormData] = useState({
+        name: category?.name || "",
+        image: category?.image || ""
     })
-  }
+    
+    const handleChange = (e)=>{
+      setFormData({
+        ...formData,
+        [e.target.name]: e.target.value
+      })
+    }
 
-  const handleSubmit = async(e)=>{
-    try {
+    const handleSubmit = async(e)=>{
       e.preventDefault();
-      const data = new FormData();
-      data.append("categoryName", formData.name);
-      data.append("image", formData.image);
-
-      const response = await AxiosInstance.post("category/add", data)
-      if(response.status === 201){
-        toast.success(response.data.message);
+      try {
+        
+        const updateCategory = new FormData();
+        updateCategory.append('name', formData.name);
+        updateCategory.append('image', formData.image);
+        
+        const response = await AxiosInstance.patch(`category/update/${category._id}`,updateCategory)
+        toast.success(response.data.message)
         setTimeout(()=>{
           navigate('/category-list')
         },2000)
+      } catch (error) {
+        
       }
-    } catch (error) {
-      
     }
-  }
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData({
-        ...formData,
-        image: file,
-      })
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setSelectedImage(e.target.result);
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          setFormData({
+            ...formData,
+            image: file,
+          })
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            setSelectedImage(e.target.result);
+          };
+          reader.readAsDataURL(file);
+        }
       };
-      reader.readAsDataURL(file);
-    }
-  };
-  
-  const handleImageBoxClick = () => {
-    inputRef.current.click();
-  };
-  
-  const removeImage = () => {
-    setFormData({
-      image: ''
-    })
-    setSelectedImage('');
-  };
-  
+      
+      const handleImageBoxClick = () => {
+        inputRef.current.click();
+      };
+      
+      const removeImage = () => {
+        setFormData({
+          image: ''
+        })
+        setSelectedImage('');
+      };
+
   return (
     <>
       <Header />
       <div className="container mt-4">
       <h2 className="mb-4" style={{ marginTop: '70px', textAlign: 'center' }}>
-        Add Category
+        Edit Category
       </h2>
 
       <React.Fragment>
@@ -118,7 +111,7 @@ const CreateCategory = () => {
               style={{ width: '200px', height: '200px', border: '1px solid #ccc', marginLeft: '285px', overflow: 'hidden', position: 'relative', cursor: 'pointer' }}
               onClick={handleImageBoxClick}
             >
-              {selectedImage ? (
+              {selectedImage || formData?.image ? (
                 <>
                   <span
                     style={{ position: 'absolute', top: '5px', right: '5px', cursor: 'pointer', color: '#fff', backgroundColor: '#333', padding: '5px' }}
@@ -126,7 +119,7 @@ const CreateCategory = () => {
                   >
                     Remove
                   </span>
-                  <img src={selectedImage} alt="Selected" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={selectedImage ? selectedImage : formData?.image } alt="Selected" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </>
               ) : 
               (
@@ -145,6 +138,7 @@ const CreateCategory = () => {
               </button>
             </div>
             </form>
+
       </React.Fragment>
     </div>
 
@@ -152,4 +146,4 @@ const CreateCategory = () => {
   );
 };
 
-export default CreateCategory;
+export default EditCategory;
