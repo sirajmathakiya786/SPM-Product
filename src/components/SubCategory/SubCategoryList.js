@@ -157,7 +157,7 @@ const SubCategoryList = () => {
             <Modal.Title>Confirm Delete</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Are you sure you want to delete this category?
+            Are you sure you want to delete this subcategory?
           </Modal.Body>
           <Modal.Footer>
           <Button variant="secondary" onClick={handleCancelConfirmation} >

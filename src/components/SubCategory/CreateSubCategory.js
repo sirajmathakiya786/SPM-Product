@@ -33,7 +33,7 @@ const CreateSubCategory = () => {
 
       const response = await AxiosInstance.post("subcategory/add", formDataSend);
       
-      if(response.status === 200){
+      if(response.status === 201){
         toast.success(response.data.message)
         setTimeout(()=>{
           navigate('/sub-category-list')

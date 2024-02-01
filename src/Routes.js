@@ -18,6 +18,7 @@ import UserAdd from './components/User/UserAdd';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditCategory from './components/Category/EditCategory';
+import ProductEdit from './components/Product/ProductEdit';
 
 function AppRoutes() {
   return (
@@ -39,6 +40,7 @@ function AppRoutes() {
         <Route path="/add-product" element={<ProductAdd />} />
         <Route path="/add-user" element={<UserAdd />} />
         <Route path="/edit-category/:id" element={<EditCategory />} />
+        <Route path="/edit-product/:id" element={<ProductEdit />} />
       </Routes>
     </>
   );
