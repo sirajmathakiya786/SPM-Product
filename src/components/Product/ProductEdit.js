@@ -24,7 +24,7 @@ const ProductEdit = () => {
 
   const { state } = useLocation();
   const product = state && state.product ? state.product : {};
-
+  console.log(state);
   const [formData, setFormData] = useState({
     productName: product?.productName || "",
     price: product?.price || "",
@@ -91,6 +91,7 @@ const ProductEdit = () => {
                   fullWidth
                   autoComplete="Category"
                   variant="outlined"
+                  onChange={handleChange}
                   style={{ borderRadius: "20px" }}
                 >
                   <MenuItem>123</MenuItem>
